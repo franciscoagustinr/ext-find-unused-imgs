@@ -1,0 +1,35 @@
+{
+  "name": "ext-find-unused-imgs",
+  "displayName": "Unused Images Finder",
+  "description": "Find unused images in your VS Code project and easy check wich is unused.",
+  "version": "0.0.1",
+  "publisher": "franciscoagustinr",
+  "readme": "./readme.md",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "find-unused-images.find",
+        "title": "Find Unused Images"
+      }
+    ]
+  },
+  "icon": "images/icon.png",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint . --ext js,ts"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.2",
+    "eslint": "^7.32.0",
+    "@types/node": "^14.17.34",
+    "@types/vscode": "^1.70.0"
+  }
+}

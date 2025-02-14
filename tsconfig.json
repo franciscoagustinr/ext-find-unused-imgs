@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES6",            // Puedes mantenerlo como ES6 o ESNext
+    "module": "CommonJS",       // Cambia esto a CommonJS para compatibilidad
+    "outDir": "./out",          // Directorio de salida
+    "rootDir": ".",             // El directorio raíz de tus archivos TypeScript
+    "strict": true,
+    "esModuleInterop": true,    // Necesario para importar módulos comunes
+    "skipLibCheck": true
+  },
+  "include": [
+    "*.ts"                       // Incluir todos los archivos .ts en la raíz
+  ],
+  "exclude": [
+    "out"                        // Excluir la carpeta out de la compilación
+  ]
+}
