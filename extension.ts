@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-// Función que busca imágenes en el proyecto
 function getImages(folderPath: string): string[] {
   const files: string[] = [];
   const extensions = [".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"];
@@ -23,46 +22,59 @@ function getImages(folderPath: string): string[] {
   return files;
 }
 
-// Función que busca referencias a una imagen en archivos del proyecto
 async function isImageUsed(imagePath: string): Promise<boolean> {
   const files = await vscode.workspace.findFiles(
     "**/*.{js,ts,jsx,tsx,html,css,scss}",
     "**/node_modules/**"
   );
+  const workspaceFolder =
+    vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
+  const relativePath = path.relative(workspaceFolder, imagePath);
   const imageName = path.basename(imagePath);
+  const parentFolder = path.basename(path.dirname(imagePath));
+
+  const pathVariations = [
+    relativePath.replace(/\\/g, "/"),
+    relativePath,
+    `${parentFolder}/${imageName}`,
+    `${parentFolder}\\${imageName}`,
+  ];
 
   for (const file of files) {
     const content = (await vscode.workspace.fs.readFile(file)).toString();
-    if (content.includes(imageName)) {
-      return true;
+    for (const pathVariant of pathVariations) {
+      if (content.includes(pathVariant)) {
+        return true;
+      }
     }
   }
   return false;
 }
 
-// Resaltar imágenes en el Explorador de Archivos
+let currentDecorationProvider: vscode.Disposable | undefined;
+
 async function highlightImages() {
   if (!vscode.workspace.workspaceFolders) return;
-
   const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
   const images = getImages(workspaceFolder);
+  const eventEmitter = new vscode.EventEmitter<vscode.Uri | undefined>();
 
-  const decorations: vscode.FileDecorationProvider = {
-    provideFileDecoration: async (uri) => {
+  const decorationProvider: vscode.FileDecorationProvider = {
+    onDidChangeFileDecorations: eventEmitter.event,
+    async provideFileDecoration(uri: vscode.Uri) {
       if (!images.includes(uri.fsPath)) return undefined;
-
       const used = await isImageUsed(uri.fsPath);
       return used
         ? {
             badge: "✔️",
-            tooltip: "En uso",
+            tooltip: "Used asset",
             color: new vscode.ThemeColor(
               "gitDecoration.addedResourceForeground"
             ),
           }
         : {
             badge: "⚠️",
-            tooltip: "No utilizada",
+            tooltip: "Unused asset",
             color: new vscode.ThemeColor(
               "gitDecoration.deletedResourceForeground"
             ),
@@ -70,19 +82,27 @@ async function highlightImages() {
     },
   };
 
-  vscode.window.registerFileDecorationProvider(decorations);
-  console.log("File decoration provider registered.");
-  console.log("/images/unused-image.png.");
+  if (currentDecorationProvider) currentDecorationProvider.dispose();
+  currentDecorationProvider =
+    vscode.window.registerFileDecorationProvider(decorationProvider);
 }
 
-// Activar la extensión
 export function activate(context: vscode.ExtensionContext) {
-  console.log("Activating extension...");
-
   highlightImages();
-
-  console.log("Extension activated.");
+  const watcher = vscode.workspace.createFileSystemWatcher("**/*");
+  let debounceTimer: NodeJS.Timeout;
+  const handleChange = () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => highlightImages(), 1000);
+  };
+  context.subscriptions.push(
+    watcher.onDidChange(handleChange),
+    watcher.onDidCreate(handleChange),
+    watcher.onDidDelete(handleChange),
+    watcher
+  );
 }
 
-// Desactivar la extensión
-export function deactivate() {}
+export function deactivate() {
+  if (currentDecorationProvider) currentDecorationProvider.dispose();
+}

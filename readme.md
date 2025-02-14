@@ -2,9 +2,6 @@
 
 ![Unused Images Finder](https://img.shields.io/badge/VS%20Code-Extension-blue?style=flat&logo=visualstudiocode)
 
-<!-- [![Version](https://img.shields.io/github/v/tag/@franciscoagustinr/ext-find-unused-imgs?label=version&style=flat)](https://github.com/@franciscoagustinr/ext-find-unused-imgs/releases)
-[![License](https://img.shields.io/github/license/@franciscoagustinr/ext-find-unused-imgs?style=flat)](https://github.com/@franciscoagustinr/ext-find-unused-imgs/blob/main/LICENSE) -->
-
 ## Find and Manage Unused Images in Your VS Code Projects 🖼️🔍
 
 This VS Code extension helps you find images that are **unused** in your project. With a quick and easy scan, it will highlight images that are not referenced anywhere in your codebase. This makes it easy to clean up and optimize your project by removing unnecessary image files.

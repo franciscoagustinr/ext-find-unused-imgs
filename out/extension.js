@@ -36,7 +36,6 @@ exports.deactivate = exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-// Función que busca imágenes en el proyecto
 function getImages(folderPath) {
     const files = [];
     const extensions = [".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"];
@@ -55,57 +54,79 @@ function getImages(folderPath) {
     scanFolder(folderPath);
     return files;
 }
-// Función que busca referencias a una imagen en archivos del proyecto
 function isImageUsed(imagePath) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const files = yield vscode.workspace.findFiles("**/*.{js,ts,jsx,tsx,html,css,scss}", "**/node_modules/**");
+        const workspaceFolder = ((_a = vscode.workspace.workspaceFolders) === null || _a === void 0 ? void 0 : _a[0].uri.fsPath) || "";
+        const relativePath = path.relative(workspaceFolder, imagePath);
         const imageName = path.basename(imagePath);
+        const parentFolder = path.basename(path.dirname(imagePath));
+        const pathVariations = [
+            relativePath.replace(/\\/g, "/"),
+            relativePath,
+            `${parentFolder}/${imageName}`,
+            `${parentFolder}\\${imageName}`,
+        ];
         for (const file of files) {
             const content = (yield vscode.workspace.fs.readFile(file)).toString();
-            if (content.includes(imageName)) {
-                return true;
+            for (const pathVariant of pathVariations) {
+                if (content.includes(pathVariant)) {
+                    return true;
+                }
             }
         }
         return false;
     });
 }
-// Resaltar imágenes en el Explorador de Archivos
+let currentDecorationProvider;
 function highlightImages() {
     return __awaiter(this, void 0, void 0, function* () {
         if (!vscode.workspace.workspaceFolders)
             return;
         const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
         const images = getImages(workspaceFolder);
-        const decorations = {
-            provideFileDecoration: (uri) => __awaiter(this, void 0, void 0, function* () {
-                if (!images.includes(uri.fsPath))
-                    return undefined;
-                const used = yield isImageUsed(uri.fsPath);
-                return used
-                    ? {
-                        badge: "✔️",
-                        tooltip: "En uso",
-                        color: new vscode.ThemeColor("gitDecoration.addedResourceForeground"),
-                    }
-                    : {
-                        badge: "⚠️",
-                        tooltip: "No utilizada",
-                        color: new vscode.ThemeColor("gitDecoration.deletedResourceForeground"),
-                    };
-            }),
+        const eventEmitter = new vscode.EventEmitter();
+        const decorationProvider = {
+            onDidChangeFileDecorations: eventEmitter.event,
+            provideFileDecoration(uri) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    if (!images.includes(uri.fsPath))
+                        return undefined;
+                    const used = yield isImageUsed(uri.fsPath);
+                    return used
+                        ? {
+                            badge: "✔️",
+                            tooltip: "Used asset",
+                            color: new vscode.ThemeColor("gitDecoration.addedResourceForeground"),
+                        }
+                        : {
+                            badge: "⚠️",
+                            tooltip: "Unused asset",
+                            color: new vscode.ThemeColor("gitDecoration.deletedResourceForeground"),
+                        };
+                });
+            },
         };
-        vscode.window.registerFileDecorationProvider(decorations);
-        console.log("File decoration provider registered.");
-        console.log("/images/unused-image.png.");
+        if (currentDecorationProvider)
+            currentDecorationProvider.dispose();
+        currentDecorationProvider =
+            vscode.window.registerFileDecorationProvider(decorationProvider);
     });
 }
-// Activar la extensión
 function activate(context) {
-    console.log("Activating extension...");
     highlightImages();
-    console.log("Extension activated.");
+    const watcher = vscode.workspace.createFileSystemWatcher("**/*");
+    let debounceTimer;
+    const handleChange = () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => highlightImages(), 1000);
+    };
+    context.subscriptions.push(watcher.onDidChange(handleChange), watcher.onDidCreate(handleChange), watcher.onDidDelete(handleChange), watcher);
 }
 exports.activate = activate;
-// Desactivar la extensión
-function deactivate() { }
+function deactivate() {
+    if (currentDecorationProvider)
+        currentDecorationProvider.dispose();
+}
 exports.deactivate = deactivate;
