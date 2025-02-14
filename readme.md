@@ -98,8 +98,8 @@ Thank you for using **Unused Images Finder**! Enjoy a cleaner, more efficient co
 
 #### Before (Unused Image):
 
-![Unused Image Example](./assets/images/unused-image.png)
+<img src="https://github.com/franciscoagustinr/ext-find-unused-imgs/blob/main/images/unused-image.png" alt="Unused Image Example" style="max-width: 100%;">
 
 #### After (Image Marked as Unused):
 
-![Used Image Example](./assets/images/used-image.png)
+<img src="https://github.com/franciscoagustinr/ext-find-unused-imgs/blob/main/images/used-image.png" alt="Used Image Example" style="max-width: 100%;">
