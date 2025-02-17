@@ -83,7 +83,7 @@ If you have any questions or encounter issues, feel free to open an issue or con
 
 ### About the Author 👨‍💻
 
-Hi, I'm **Francisco Agustin**! I'm a software developer focused on building tools that improve productivity and code quality. You can find more of my projects on [GitHub](https://github.com/franciscoagustin).
+Hi, I'm **Francisco Agustin**! I'm a software developer focused on building tools that improve productivity and code quality. You can find more of my projects on [GitHub](https://github.com/franciscoagustinr).
 
 ---
 
