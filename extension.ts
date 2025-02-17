@@ -33,17 +33,16 @@ async function isImageUsed(imagePath: string): Promise<boolean> {
   const imageName = path.basename(imagePath);
   const parentFolder = path.basename(path.dirname(imagePath));
 
-  const pathVariations = [
-    relativePath.replace(/\\/g, "/"),
-    relativePath,
-    `${parentFolder}/${imageName}`,
-    `${parentFolder}\\${imageName}`,
+  const regexPatterns = [
+    new RegExp(`src=[\"\']/?${relativePath}[\"\']`, "i"),
+    new RegExp(`src=[\"\']/?${parentFolder}/${imageName}[\"\']`, "i"),
+    new RegExp(`src=[\"\']/?${imageName}[\"\']`, "i"),
   ];
 
   for (const file of files) {
     const content = (await vscode.workspace.fs.readFile(file)).toString();
-    for (const pathVariant of pathVariations) {
-      if (content.includes(pathVariant)) {
+    for (const regex of regexPatterns) {
+      if (regex.test(content)) {
         return true;
       }
     }
