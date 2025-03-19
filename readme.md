@@ -71,7 +71,7 @@ Feel free to contribute! Open a pull request or file an issue on [GitHub](https:
 
 ### License 📜
 
-This extension is licensed under the [MIT License](https://github.com/franciscoagustinr/ext-find-unused-imgs/blob/main/LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ---
 
