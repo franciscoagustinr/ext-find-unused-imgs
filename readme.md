@@ -65,13 +65,13 @@ You can configure the extension to search specific file types or adjust how file
 
 ### Contributing 🤝
 
-Feel free to contribute! Open a pull request or file an issue on [GitHub](https://github.com/@franciscoagustinr/ext-find-unused-imgs).
+Feel free to contribute! Open a pull request or file an issue on [GitHub](https://github.com/franciscoagustinr/ext-find-unused-imgs).
 
 ---
 
 ### License 📜
 
-This extension is licensed under the [MIT License](https://github.com/@franciscoagustinr/ext-find-unused-imgs/blob/main/LICENSE).
+This extension is licensed under the [MIT License](https://github.com/franciscoagustinr/ext-find-unused-imgs/blob/main/LICENSE).
 
 ---
 
@@ -83,7 +83,7 @@ If you have any questions or encounter issues, feel free to open an issue or con
 
 ### About the Author 👨‍💻
 
-Hi, I'm **Francisco Agustin**! I'm a software developer focused on building tools that improve productivity and code quality. You can find more of my projects on [GitHub](https://github.com/franciscoagustinr).
+Hi, I'm **Francisco Agustin**! I'm a software developer focused on building tools that improve productivity and code quality. You can find more of my projects on [GitHub](https://github.com/franciscoagustinr) or [My Web](https://franciscoagustinr.dev).
 
 ---
 
