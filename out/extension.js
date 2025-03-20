@@ -57,7 +57,7 @@ function getImages(folderPath) {
 function isImageUsed(imagePath) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const files = yield vscode.workspace.findFiles("**/*.{js,ts,jsx,tsx,html,css,scss}", "**/node_modules/**");
+        const files = yield vscode.workspace.findFiles("**/*.{js,ts,jsx,tsx,html,css,scss,sass,vue,svelte,component.ts,module.ts,service.ts,pipe.ts,directive.ts,astro}", "**/node_modules/**");
         const workspaceFolder = ((_a = vscode.workspace.workspaceFolders) === null || _a === void 0 ? void 0 : _a[0].uri.fsPath) || "";
         const relativePath = path.relative(workspaceFolder, imagePath);
         const imageName = path.basename(imagePath);

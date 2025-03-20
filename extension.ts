@@ -24,7 +24,7 @@ function getImages(folderPath: string): string[] {
 
 async function isImageUsed(imagePath: string): Promise<boolean> {
   const files = await vscode.workspace.findFiles(
-    "**/*.{js,ts,jsx,tsx,html,css,scss}",
+    "**/*.{js,ts,jsx,tsx,html,css,scss,sass,vue,svelte,component.ts,module.ts,service.ts,pipe.ts,directive.ts,astro}",
     "**/node_modules/**"
   );
   const workspaceFolder =

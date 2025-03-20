@@ -2,7 +2,7 @@
   "name": "ext-find-unused-imgs",
   "displayName": "Unused Images Finder",
   "description": "Find unused images in your VS Code project and easy check wich is unused.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "license": "MIT",
   "publisher": "franciscoagustinr",
   "readme": "./readme.md",
